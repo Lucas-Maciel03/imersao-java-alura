@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 public class App {
+
     public static void main(String[] args) throws Exception {
 
         //Fazer uma conexao HTTP e buscas os top 250 filmes
@@ -22,9 +23,23 @@ public class App {
         List<Map<String, String>> listaDeFilmes = parser.parse(body);
         //Exibir e manipular os dados
         for (Map<String,String> filme : listaDeFilmes) {
-            System.out.println(filme.get("title"));
-            System.out.println(filme.get("image"));
-            System.out.println(filme.get("imDbRating"));
+            System.out.println("\u001b[0m Titulo: \u001b[1m" + filme.get("title"));
+            System.out.println("\u001b[0m Poster: \u001b[1m" + filme.get("image"));
+            System.out.println("\u001b[37m \u001b[41mClassificação: " + filme.get("imDbRating") + "\u001b[0m");
+            
+            float a = Float.parseFloat(filme.get("imDbRating"));           
+            int ab = (int) a;
+            String star = "\u2B50";
+            
+            for(int i=0; i<ab; i++){
+                if(ab <= a){
+                    System.out.printf(star);
+                }
+            }
+            if(a > ab + 0.4){
+                System.out.printf(star);
+            }
+            
             System.out.println();
         }
     }
