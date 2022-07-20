@@ -1,4 +1,6 @@
+import java.io.InputStream;
 import java.net.URI;
+import java.net.URL;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
@@ -21,25 +23,20 @@ public class App {
         //Extrair só os dados que interessam(Titulo, poster, rating)
         var parser = new JsonParser();
         List<Map<String, String>> listaDeFilmes = parser.parse(body);
+        
         //Exibir e manipular os dados
+        var geradora = new GeradoraDeFigurinhas();
         for (Map<String,String> filme : listaDeFilmes) {
-            System.out.println("\u001b[0m Titulo: \u001b[1m" + filme.get("title"));
-            System.out.println("\u001b[0m Poster: \u001b[1m" + filme.get("image"));
-            System.out.println("\u001b[37m \u001b[41mClassificação: " + filme.get("imDbRating") + "\u001b[0m");
+
+            String urlImagem = filme.get("image");
+            String titulo = filme.get("title");
             
-            float a = Float.parseFloat(filme.get("imDbRating"));           
-            int ab = (int) a;
-            String star = "\u2B50";
-            
-            for(int i=0; i<ab; i++){
-                if(ab <= a){
-                    System.out.printf(star);
-                }
-            }
-            if(a > ab + 0.4){
-                System.out.printf(star);
-            }
-            
+            InputStream  inputStream = new URL(urlImagem).openStream();
+            String nomeArquivo = titulo + ".png";
+
+            geradora.cria(inputStream, nomeArquivo);
+
+            System.out.println(titulo);            
             System.out.println();
         }
     }
