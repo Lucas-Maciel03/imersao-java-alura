@@ -1,9 +1,10 @@
+import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.InputStream;
-import java.awt.Color;
-import java.awt.Font;
+
 import javax.imageio.ImageIO;
 
 public class GeradoraDeFigurinhas {
@@ -26,7 +27,7 @@ public class GeradoraDeFigurinhas {
 
         //configurar a fonte
         var fonte = new Font(Font.SANS_SERIF, Font.BOLD, 64);
-        graphics.setColor(Color.yellow);
+        graphics.setColor(Color.YELLOW);
         graphics.setFont(fonte);
 
         //escrever uma frase na nova imagem

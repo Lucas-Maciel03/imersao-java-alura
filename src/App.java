@@ -1,10 +1,5 @@
 import java.io.InputStream;
-import java.net.URI;
 import java.net.URL;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
-import java.net.http.HttpResponse.BodyHandlers;
 import java.util.List;
 import java.util.Map;
 
@@ -14,29 +9,28 @@ public class App {
 
         //Fazer uma conexao HTTP e buscas os top 250 filmes
         String url = "https://alura-imdb-api.herokuapp.com/movies";
-        URI endereco = URI.create(url);
-        var client = HttpClient.newHttpClient();
-        var request = HttpRequest.newBuilder(endereco).GET().build();
-        HttpResponse<String> response = client.send(request, BodyHandlers.ofString());
-        String body = response.body();
+        var extrator = new ExtratorDeConteudoDoImdb();
 
-        //Extrair só os dados que interessam(Titulo, poster, rating)
-        var parser = new JsonParser();
-        List<Map<String, String>> listaDeFilmes = parser.parse(body);
+        //String url = "https://raw.githubusercontent.com/alura-cursos/imersao-java/api/NASA-APOD.json";
+        //var extrator = new ExtratorDeConteudoDaNasa();
+
+        var http = new ClienteHttp();
+        String json = http.bucaDados(url);
         
         //Exibir e manipular os dados
-        var geradora = new GeradoraDeFigurinhas();
-        for (Map<String,String> filme : listaDeFilmes) {
+        List<Conteudo> conteudos = extrator.extraiConteudos(json);
 
-            String urlImagem = filme.get("image");
-            String titulo = filme.get("title");
-            
-            InputStream  inputStream = new URL(urlImagem).openStream();
-            String nomeArquivo = titulo + ".png";
+        var geradora = new GeradoraDeFigurinhas();
+        for (int i=0; i<3; i++) {
+
+            Conteudo conteudo = conteudos.get(i);
+
+            InputStream  inputStream = new URL(conteudo.getUrlImagem()).openStream();
+            String nomeArquivo = "saida/" + conteudo.getTitulo() + ".png";
 
             geradora.cria(inputStream, nomeArquivo);
 
-            System.out.println(titulo);            
+            System.out.println(conteudo.getTitulo());            
             System.out.println();
         }
     }
